@@ -1,0 +1,45 @@
+/* General styles for Kanban Board */
+.hidden {
+    display: none;
+  }
+  
+  .kanban-task {
+    background: #f4f4f4;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .kanban-column {
+    display: inline-block;
+    vertical-align: top;
+    width: 30%;
+    padding: 10px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .kanban-board {
+    margin-top: 20px;
+  }
+  
+  .kanban-columns {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  

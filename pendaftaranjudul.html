@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pendaftaran Judul Proposal</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    function showSuccessMessage(event) {
+      event.preventDefault(); // Mencegah pengiriman formulir secara default
+
+      // Ambil nilai input
+      const nim = document.getElementById('nim').value;
+      const nama = document.getElementById('nama').value;
+      const judul = document.getElementById('judul').value;
+      const deskripsi = document.getElementById('deskripsi').value;
+
+      // Validasi NIM harus angka
+      if (!/^\d+$/.test(nim)) {
+        alert("NIM harus berupa angka!");
+        return;
+      }
+
+      // Ambil data yang sudah ada di localStorage
+      const judulList = JSON.parse(localStorage.getItem('judulList')) || [];
+
+      // Tambahkan data baru ke list
+      judulList.push({ nim, nama, judul, deskripsi });
+
+      // Simpan kembali ke localStorage
+      localStorage.setItem('judulList', JSON.stringify(judulList));
+
+      // Reset form
+      document.getElementById('nim').value = '';
+      document.getElementById('nama').value = '';
+      document.getElementById('judul').value = '';
+      document.getElementById('deskripsi').value = '';
+
+      // Tampilkan pesan sukses
+      const messageBox = document.getElementById('success-message');
+      messageBox.style.display = 'block';
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>SISTEM INFORMASI<br>TUGAS AKHIR</h2>
+      <nav>
+        <ul>
+          <li><a href="index.html">Dashboard</a></li>
+          <li><a href="pendaftaranjudul.html">Proposal Pendaftaran Judul</a></li>
+          <li><a href="pengajuanbimbingan.html">Pengajuan Bimbingan</a></li>
+          <li><a href="jadwal.html">Jadwal Bimbingan</a></li>
+          <li><a href="proposal.html">Project Manajer</a></li>
+          <li><a href="statusjudul.html">Status Proposal</a></li>
+          <li><a href="laporanjudul.html">Pengumpulan Laporan</a></li>
+          <li><a href="hasilupload.html">Hasil Upload</a></li>
+          <li><a href="login.html">Logout</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Form Pendaftaran Judul -->
+      <section>
+        <h1>Pendaftaran Judul Proposal</h1>
+        <div class="overview-box">
+          <form action="#" method="POST" onsubmit="showSuccessMessage(event)">
+            <label for="nim">NIM:</label>
+            <input type="text" id="nim" name="nim" required>
+
+            <label for="nama">Nama Lengkap:</label>
+            <input type="text" id="nama" name="nama" required>
+
+            <label for="judul">Judul Proposal:</label>
+            <input type="text" id="judul" name="judul" required>
+
+            <label for="deskripsi">Deskripsi:</label>
+            <textarea id="deskripsi" name="deskripsi" required></textarea>
+
+            <button type="submit">Daftarkan Judul</button>
+          </form>
+          <div id="success-message" style="display: none; margin-top: 20px; color: green;">
+            Berhasil melakukan pendaftaran!
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
