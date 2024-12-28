@@ -18,7 +18,7 @@ $nim = $_POST['username'];
 $pwd = $_POST['password'];
 
 // Validasi username dan password
-$sql = "SELECT * FROM login WHERE NIM = ? AND password = ?";
+$sql = "SELECT NIM, password, nama, matkultugasakhir, totalsks, ipk, dosenpembimbing FROM login WHERE NIM = ? AND password = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('ss', $nim, $pwd);
 $stmt->execute();
@@ -33,7 +33,11 @@ if ($result->num_rows === 1) {
         $row['totalsks'] >= 110 &&
         $row['ipk'] >= 2.00
     ) {
-        $_SESSION['username'] = $nim; // Simpan data sesi
+        // Simpan data ke sesi
+        $_SESSION['username'] = $nim;
+        $_SESSION['nama'] = $row['nama'];
+        $_SESSION['dosenpembimbing'] = $row['dosenpembimbing'];
+
         header('Location: index.php'); // Arahkan ke halaman index
         exit(); // Pastikan script berhenti di sini
     } else {

@@ -25,7 +25,7 @@ if (!isset($_SESSION['username'])) {
         <ul>
           <li><a href="index.php">Dashboard</a></li>
           <li><a href="pendaftaranjudul.html">Proposal Pendaftaran Judul</a></li>
-          <li><a href="pengajuanbimbingan.html">Pengajuan Bimbingan</a></li>
+          <li><a href="pengajuanbimbingan.php">Pengajuan Bimbingan</a></li>
           <li><a href="jadwal.html">Jadwal Bimbingan</a></li>
           <li><a href="proposal.html">Project Manajer</a></li>
           <li><a href="statusjudul.html">Status Proposal</a></li>
@@ -40,7 +40,7 @@ if (!isset($_SESSION['username'])) {
     <main class="main-content">
       <header>
         <div class="user-info">
-          <p>Selamat Datang, <span><?php echo htmlspecialchars($_SESSION['username']); ?></span></p>
+          <p>Selamat Datang, <span><?php echo htmlspecialchars($_SESSION['nama']); ?></span></p>
         </div>
       </header>
       <section>
