@@ -31,7 +31,8 @@ if ($result->num_rows === 1) {
     if (
         $row['matkultugasakhir'] === 'YA' &&
         $row['totalsks'] >= 110 &&
-        $row['ipk'] >= 2.00
+        $row['ipk'] >= 2.00 &&
+        $row['dosenpembimbing'] != ""
     ) {
         // Simpan data ke sesi
         $_SESSION['username'] = $nim;
@@ -41,11 +42,11 @@ if ($result->num_rows === 1) {
         header('Location: index.php'); // Arahkan ke halaman index
         exit(); // Pastikan script berhenti di sini
     } else {
-        header('Location: tidakvalid.html'); // Arahkan ke halaman validasi gagal
+        header('Location: login.php?error=not_eligible');
         exit();
     }
 } else {
-    header('Location: login.php?error=Username atau Password salah');
+    header('Location: login.php?error=invalid_credentials');
     exit();
 }
 

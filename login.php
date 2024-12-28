@@ -80,6 +80,17 @@
 </head>
 <body>
   <div class="login-container">
+    <?php if (isset($_GET['error'])): ?>
+      <div class="error-message">
+        <?php
+        if ($_GET['error'] == 'invalid_credentials') {
+          echo 'Username dan Password tidak valid.<br> Klik <a href="login.php" class="back-link">kembali</a> untuk melakukan login ulang.';
+        } elseif ($_GET['error'] == 'not_eligible') {
+          echo 'Anda Tidak Memenuhi Syarat Untuk Melakukan Tugas Akhir.<br> Klik <a href="login.php" class="back-link">kembali</a> untuk melakukan login ulang.';
+        }
+        ?>
+      </div>
+    <?php else: ?>
     <h2>Login</h2>
     <form action="process_login.php" method="POST">
       <label for="username">NIM:</label>
@@ -93,13 +104,7 @@
       <p>Gunakanlah username dan password siakad</p>
       <p><a href="#">Demo Documentation</a></p>
     </form>
-    <div id="error-message">
-      <?php
-      if (isset($_GET['error'])) {
-        echo htmlspecialchars($_GET['error']);
-      }
-      ?>
-    </div>
+    <?php endif; ?>
   </div>
 </body>
 </html>
