@@ -27,7 +27,7 @@ if (!isset($_SESSION['username'])) {
           <li><a href="pendaftaranjudul.html">Proposal Pendaftaran Judul</a></li>
           <li><a href="pengajuanbimbingan.php">Pengajuan Bimbingan</a></li>
           <li><a href="jadwal.php">Jadwal Bimbingan</a></li>
-          <li><a href="proposal.html">Project Manajer</a></li>
+          <li><a href="proposal.php">Project Manajer</a></li>
           <li><a href="statusjudul.html">Status Proposal</a></li>
           <li><a href="laporanjudul.html">Pengumpulan Laporan</a></li>
           <li><a href="hasilupload.html">Hasil Upload</a></li>

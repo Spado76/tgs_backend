@@ -1,22 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['username'])) {
-    header('Location: login.php');
-    exit();
-}
-
-$nim = $_SESSION['username'];
-
-// Koneksi ke database
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "tugasakhir";
-$conn = new mysqli($host, $user, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Koneksi gagal: " . $conn->connect_error);
-}
+include 'koneksi.php'; // file koneksi database
 
 // Ambil data dari tabel pengajuanbimbingan
 $sql = "SELECT p.id_pengajuan, p.NIM, p.nama, p.tgl_bimbingan, p.catatan, p.status, p.dosenpembimbing FROM pengajuanbimbingan p WHERE nim = ?";
@@ -148,7 +132,7 @@ $stmt->close();
           <li><a href="pendaftaranjudul.html">Proposal Pendaftaran Judul</a></li>
           <li><a href="pengajuanbimbingan.php">Pengajuan Bimbingan</a></li>
           <li><a href="jadwal.php">Jadwal Bimbingan</a></li>
-          <li><a href="proposal.html">Project Manajer</a></li>
+          <li><a href="proposal.php">Project Manajer</a></li>
           <li><a href="statusjudul.html">Status Proposal</a></li>
           <li><a href="laporanjudul.html">Pengumpulan Laporan</a></li>
           <li><a href="hasilupload.html">Hasil Upload</a></li>
