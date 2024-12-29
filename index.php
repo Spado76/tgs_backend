@@ -24,11 +24,11 @@ if (!isset($_SESSION['username'])) {
       <nav>
         <ul>
           <li><a href="index.php">Dashboard</a></li>
-          <li><a href="pendaftaranjudul.html">Proposal Pendaftaran Judul</a></li>
+          <li><a href="pendaftaranjudul.php">Proposal Pendaftaran Judul</a></li>
           <li><a href="pengajuanbimbingan.php">Pengajuan Bimbingan</a></li>
           <li><a href="jadwal.php">Jadwal Bimbingan</a></li>
           <li><a href="proposal.php">Project Manajer</a></li>
-          <li><a href="statusjudul.html">Status Proposal</a></li>
+          <li><a href="statusjudul.php">Status Proposal</a></li>
           <li><a href="laporanjudul.html">Pengumpulan Laporan</a></li>
           <li><a href="hasilupload.html">Hasil Upload</a></li>
           <li><a href="logout.php">Logout</a></li>

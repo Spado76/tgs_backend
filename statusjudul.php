@@ -9,8 +9,11 @@ $nim = $_SESSION['username'];
 
 include 'koneksi.php'; // file koneksi database
 
-// Ambil data dari tabel pengajuanbimbingan
-$sql = "SELECT p.id_pengajuan, p.NIM, p.nama, p.tgl_bimbingan, p.catatan, p.status, p.dosenpembimbing FROM pengajuanbimbingan p WHERE nim = ?";
+// Ambil data dari tabel pengajuanjudul
+$sql = "SELECT p.id_judul, p.NIM, l.nama AS nama_login, p.judul_proposal, p.deskripsi, p.status, p.dosenpembimbing 
+        FROM pengajuanjudul p
+        INNER JOIN login l ON p.NIM = l.NIM
+        WHERE p.NIM = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $nim);
 
@@ -20,14 +23,14 @@ $result = $stmt->get_result(); // Ambil hasil query
 
 // Tutup statement dan koneksi
 $stmt->close();
-
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Status Jadwal Bimbingan</title>
+  <title>Status Judul Proposal</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="popup.css">
   <style>
@@ -93,34 +96,17 @@ $stmt->close();
     }
   </style>
   <script>
-    function validateDate() {
-      const tglBimbingan = document.getElementById('tglBimbingan').value;
-      const selectedDate = new Date(tglBimbingan);
-      const today = new Date();
-      
-      // Set batas minimal ke besok
-      const minDate = new Date();
-      minDate.setDate(today.getDate());
-
-      if (selectedDate < minDate) {
-        alert("Tanggal bimbingan harus minimal besok.");
-        return false; // Menghentikan submit form
-      }
-
-      return true; // Melanjutkan submit jika valid
-    }
-
     function confirmDelete(id) {
       if (confirm('Yakin ingin menghapus data ini?')) {
-        window.location.href = 'hapus_bimbingan.php?id=' + id; // Redirect ke halaman hapus
+        window.location.href = 'hapus_judul.php?id=' + id; // Redirect ke halaman hapus
       }
     }
 
-    function openEditPopup(idPengajuan, nama, tglBimbingan, catatan) {
-      document.getElementById('id').value = idPengajuan;
+    function openEditPopup(id_judul, nama, judul_proposal, deskripsi) {
+      document.getElementById('id').value = id_judul;
       document.getElementById('nama').value = nama;
-      document.getElementById('tglBimbingan').value = tglBimbingan;
-      document.getElementById('catatan').value = catatan;
+      document.getElementById('judul_proposal').value = judul_proposal;
+      document.getElementById('deskripsi').value = deskripsi;
       document.getElementById('editPopup').style.display = 'block';
     }
 
@@ -131,6 +117,7 @@ $stmt->close();
 </head>
 <body>
   <div class="container">
+    <!-- Sidebar -->
     <aside class="sidebar">
       <h2>SISTEM INFORMASI<br>TUGAS AKHIR</h2>
       <nav>
@@ -148,35 +135,36 @@ $stmt->close();
       </nav>
     </aside>
 
+    <!-- Main Content -->
     <div class="main-content">
       <section>
-        <h1>Status Jadwal Bimbingan</h1>
-        <table>
-          <thead>
-            <tr>
-              <th>NIM</th>
-              <th>Nama</th>
-              <th>Tanggal Bimbingan</th>
-              <th>Catatan</th>
-              <th>Status</th>
-              <th>Dosen Pembimbing</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
+        <h1>Status Judul Proposal</h1>
+          <table>
+            <thead>
+              <tr>
+                <th>NIM</th>
+                <th>Nama</th>
+                <th>Judul Proposal</th>
+                <th>Deskripsi</th>
+                <th>Status</th>
+                <th>Dosen Pembimbing</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
             <?php if ($result->num_rows > 0): ?>
               <?php while ($row = $result->fetch_assoc()): ?>
                 <tr>
                   <td><?= $row['NIM'] ?></td>
-                  <td><?= $row['nama'] ?></td>
-                  <td><?= $row['tgl_bimbingan'] ?></td>
-                  <td><?= $row['catatan'] ?: '-' ?></td>
+                  <td><?= $row['nama_login'] ?></td>
+                  <td><?= $row['judul_proposal'] ?></td>
+                  <td><?= $row['deskripsi'] ?: '-' ?></td>
                   <td><?= $row['status'] ?></td>
                   <td><?= $row['dosenpembimbing'] ?: 'Belum Ditentukan' ?></td>
                   <td>
                     <?php if ($row['status'] == 'Belum Disetujui'): ?>
-                      <button onclick="openEditPopup('<?= $row['id_pengajuan'] ?>', '<?= $row['nama'] ?>', '<?= $row['tgl_bimbingan'] ?>', '<?= $row['catatan'] ?>')">Edit</button>
-                      <button class="delete-btn" onclick="confirmDelete('<?= $row['id_pengajuan'] ?>')">Hapus</button>
+                      <button onclick="openEditPopup('<?= $row['id_judul'] ?>', '<?= $row['nama_login'] ?>', '<?= $row['judul_proposal'] ?>', '<?= $row['deskripsi'] ?>')">Edit</button>
+                      <button class="delete-btn" onclick="confirmDelete('<?= $row['id_judul'] ?>')">Hapus</button>
                     <?php else: ?>
                       <!-- Jika status bukan "Belum Disetujui", tidak menampilkan tombol -->
                       <span>-</span>
@@ -189,24 +177,24 @@ $stmt->close();
                 <td colspan="7" class="message">Belum ada status.</td>
               </tr>
             <?php endif; ?>
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </section>
     </div>
   </div>
-
   <!-- Popup untuk Edit -->
   <div id="editPopup" style="display: none;">
     <div class="popup-content">
       <h2>Edit Jadwal Bimbingan</h2>
-      <form action="update_bimbingan.php" method="POST" onsubmit="return validateDate()">
-        <input type="hidden" name="id_pengajuan" id="id">
+      <form action="update_judul.php" method="POST">
+        <input type="hidden" name="id_judul" id="id">
         <label for="nama">Nama:</label>
         <input type="text" name="nama" id="nama" readonly>
-        <label for="tglBimbingan">Tanggal Bimbingan:</label>
-        <input type="date" name="tgl_bimbingan" id="tglBimbingan">
-        <label for="catatan">Catatan:</label>
-        <textarea name="catatan" id="catatan"></textarea>
+        <label for="judul_proposal">Judul Proposal:</label>
+        <input type="text" name="judul_proposal" id="judul_proposal">
+        <label for="deskripsi">Deskripsi:</label>
+        <textarea name="deskripsi" id="deskripsi"></textarea>
         <button type="submit">Simpan</button>
         <button type="button" onclick="closeEditPopup()">Batal</button>
       </form>
@@ -214,4 +202,3 @@ $stmt->close();
   </div>
 </body>
 </html>
-<?php $conn->close(); ?>

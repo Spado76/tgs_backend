@@ -22,7 +22,6 @@ if ($conn->connect_error) {
 }
 
 // Proses pengajuan
-$message = '';
 $message_error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tgl_bimbingan = $_POST['tanggal'];
@@ -41,7 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param('sssss', $nim_login, $nama_login, $tgl_bimbingan, $catatan, $dosen_pembimbing);
 
         if ($stmt->execute()) {
-            $message = 'Berhasil mengajukan bimbingan.';
+            // Redirect setelah berhasil menyimpan data
+            header('Location: pengajuanbimbingan.php?success=1');
+            exit();
         } else {
             $message_error = 'Gagal mengajukan bimbingan: ' . $stmt->error;
         }
@@ -68,11 +69,11 @@ $conn->close();
       <nav>
         <ul>
           <li><a href="index.php">Dashboard</a></li>
-          <li><a href="pendaftaranjudul.html">Proposal Pendaftaran Judul</a></li>
+          <li><a href="pendaftaranjudul.php">Proposal Pendaftaran Judul</a></li>
           <li><a href="pengajuanbimbingan.php">Pengajuan Bimbingan</a></li>
           <li><a href="jadwal.php">Jadwal Bimbingan</a></li>
           <li><a href="proposal.php">Project Manajer</a></li>
-          <li><a href="statusjudul.html">Status Proposal</a></li>
+          <li><a href="statusjudul.php">Status Proposal</a></li>
           <li><a href="laporanjudul.html">Pengumpulan Laporan</a></li>
           <li><a href="hasilupload.html">Hasil Upload</a></li>
           <li><a href="logout.php">Logout</a></li>
@@ -101,14 +102,10 @@ $conn->close();
 
             <button type="submit">Ajukan</button>
           </form>
-          <?php if ($message): ?>
-          <div style="margin-top: 20px; color: green;">
-            <?php echo htmlspecialchars($message); ?>
-          </div>
-          <?php elseif ($message_error): ?>
-          <div style="margin-top: 20px; color: red;">
-            <?php echo htmlspecialchars($message_error); ?>
-          </div>
+          <?php if (isset($_GET['success']) && $_GET['success'] == '1'): ?>
+            <div id="success-message" style="display: block; margin-top: 20px; color: green;">
+              Berhasil melakukan pengajuan!
+            </div>
           <?php endif; ?>
         </div>
       </section>

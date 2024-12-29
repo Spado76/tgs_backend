@@ -4,15 +4,7 @@ $tgl_bimbingan = $_POST['tgl_bimbingan'];
 $catatan = $_POST['catatan'];
 
 // Koneksi database
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "tugasakhir";
-$conn = new mysqli($host, $user, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Koneksi gagal: " . $conn->connect_error);
-}
+include 'koneksi.php';
 
 $sql = "UPDATE pengajuanbimbingan SET tgl_bimbingan = ?, catatan = ? WHERE id_pengajuan = ?";
 $stmt = $conn->prepare($sql);
