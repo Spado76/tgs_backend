@@ -64,8 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <li><a href="jadwal.php">Jadwal Bimbingan</a></li>
           <li><a href="proposal.php">Project Manajer</a></li>
           <li><a href="statusjudul.php">Status Proposal</a></li>
-          <li><a href="laporanjudul.html">Pengumpulan Laporan</a></li>
-          <li><a href="hasilupload.html">Hasil Upload</a></li>
+          <li><a href="laporanjudul.php">Pengumpulan Laporan</a></li>
+          <li><a href="hasilupload.php">Hasil Upload</a></li>
           <li><a href="logout.php">Logout</a></li>
         </ul>
       </nav>
