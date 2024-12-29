@@ -1,3 +1,15 @@
+<?php
+session_start();
+include 'koneksi.php'; // file koneksi database
+
+// Validasi sesi login
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
+}
+$nim = $_SESSION['username'];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,13 +58,6 @@
     .upload-item strong {
       color: #333;
     }
-    .upload-item a {
-      color: #007bff;
-      text-decoration: none;
-    }
-    .upload-item a:hover {
-      text-decoration: underline;
-    }
     .upload-item button {
       display: inline-block;
       margin-top: 10px;
@@ -94,37 +99,53 @@
 <body>
   <div class="container">
     <h1>Hasil Upload</h1>
-    <div id="resultList"></div>
+    <div id="resultList">
+      <?php
+        // Query untuk mengambil data berdasarkan NIM
+        $stmt = $conn->prepare("SELECT pl.id_laporan, pj.judul_proposal, pl.jenis_laporan 
+                                FROM pengumpulanlaporan AS pl
+                                JOIN pengajuanjudul AS pj ON pl.id_judul = pj.id_judul
+                                WHERE pl.NIM = ?");
+        $stmt->bind_param('s', $nim);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+          while ($row = $result->fetch_assoc()) {
+            echo '<div class="upload-item">';
+            echo '<p><strong>Judul Proposal:</strong> ' . htmlspecialchars($row['judul_proposal']) . '</p>';
+            echo '<p><strong>Jenis Laporan:</strong> ' . htmlspecialchars($row['jenis_laporan']) . '</p>';
+            echo '<p><strong>Status:</strong> Terkirim</p>';
+            echo '<button onclick="deleteItem(' . intval($row['id_laporan']) . ')">Hapus</button>';
+            echo '</div>';
+          }
+        } else {
+          echo '<p class="empty-state">Tidak ada laporan yang diunggah.</p>';
+        }
+
+        $stmt->close();
+        $conn->close();
+      ?>
+    </div>
     <a href="index.php" class="dashboard-button">Kembali ke Dashboard</a>
   </div>
 
   <script>
-    const resultList = document.getElementById('resultList');
-    const uploads = JSON.parse(localStorage.getItem('uploads')) || [];
-
-    if (uploads.length === 0) {
-      resultList.innerHTML = '<p class="empty-state">Tidak ada laporan yang diunggah.</p>';
-    } else {
-      uploads.forEach((upload, index) => {
-        const item = document.createElement('div');
-        item.classList.add('upload-item');
-        item.innerHTML = `
-          <p><strong>NIM:</strong> ${upload.nim}</p>
-          <p><strong>Nama:</strong> ${upload.name}</p>
-          <p><strong>Jenis Laporan:</strong> ${upload.reportType}</p>
-          <p><strong>File:</strong> ${upload.file ? upload.file : 'Tidak ada'}</p>
-          <p><strong>Link Jurnal:</strong> ${upload.link ? `<a href="${upload.link}" target="_blank">Lihat Jurnal</a>` : 'Tidak ada'}</p>
-          <button onclick="deleteItem(${index})">Hapus</button>
-        `;
-        resultList.appendChild(item);
-      });
-    }
-
-    function deleteItem(index) {
-      const uploads = JSON.parse(localStorage.getItem('uploads')) || [];
-      uploads.splice(index, 1);
-      localStorage.setItem('uploads', JSON.stringify(uploads));
-      location.reload(); // Refresh halaman
+    function deleteItem(idLaporan) {
+      if (confirm("Apakah Anda yakin ingin menghapus laporan ini?")) {
+        fetch(`hapus_laporan.php?id=${idLaporan}`, {
+          method: 'GET'
+        })
+        .then(response => response.text())
+        .then(data => {
+          alert(data);
+          location.reload(); // Refresh halaman
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Gagal menghapus laporan.');
+        });
+      }
     }
   </script>
 </body>
